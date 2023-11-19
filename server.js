@@ -1,12 +1,20 @@
+require('dotenv').config()
 const express = require('express')
 const app = express()
 const path = require('path')
-const { logger } = require(`./middleware/logger`)
+const { logger, logEvents } = require(`./middleware/logger`)
 const errorHandler = require('./middleware/errorHandler')
 const cookieParser = require('cookie-parser')
 const cors = require('cors')
 const corsOptions = require('./config/corsOptions')
+const connectDB = require('./config/dbConn')
+const mongoose = require('mongoose')
 const PORT = process.env.PORT || 3500
+
+console.log(process.env.NODE_ENV)
+//connect to MongoDB
+connectDB()
+
 //log events
 app.use(logger)
 //cross origin resource sharing with our allowed origins
@@ -33,5 +41,13 @@ app.all('*', (req, res) => {
 })
 //log and console log error
 app.use(errorHandler)
-//start server
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`))
+//start server, say when server is running on MongoDB
+mongoose.connection.once('open', () => {
+    console.log('Connected to MongoDB')
+    app.listen(PORT, () => console.log(`Server running on port ${PORT}`))
+})
+//log any connection errors when connecting to MongoDB
+mongoose.connection.on('error', err => {
+    console.log(err)
+    logEvents(`${err.no}: ${err.code}\t${err.syscall}\t${err.hostname}`, 'mongoErrLog.log')
+})
