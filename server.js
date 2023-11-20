@@ -9,7 +9,7 @@ const cors = require('cors')
 const corsOptions = require('./config/corsOptions')
 const connectDB = require('./config/dbConn')
 const mongoose = require('mongoose')
-const PORT = process.env.PORT || 3500
+const PORT = process.env.PORT || 4000
 
 console.log(process.env.NODE_ENV)
 //connect to MongoDB
@@ -28,6 +28,14 @@ app.use(cookieParser())
 app.use('/', express.static(path.join(__dirname, '/public')))
 //index.html route
 app.use('/', require('./routes/root'))
+//TODO ADD API ENDPOINTS, ROUTES, AND CONTROLLERS FOR EACH DATA MODEL
+app.use('/user', require('./routes/userRoutes'))
+app.use('/info', require('./routes/infoRoutes'))
+app.use('/income', require('./routes/incomeRoutes'))
+app.use('/contact', require('./routes/contactRoutes'))
+app.use('/plan', require('./routes/planRoutes'))
+
+
 //routing for everything else, error stream
 app.all('*', (req, res) => {
     res.status(404)

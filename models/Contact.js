@@ -3,7 +3,7 @@ const mongoose = require('mongoose')
 const contactSchema = new mongoose.Schema(
     {   //reference the user object ID to make this traceable to each individual user who created each unique one
         user: {
-            type: mongoose.Schema.Types.ObjectId,
+            type: mongoose.Schema.Types.ObjectId, //replaces default ID with user ID to track to user
             required: true,
             ref: 'User'
         },
