@@ -113,11 +113,12 @@ const deleteUser = asyncHandler(async (req, res) => {
         return res.status(400).json({ message: 'User not found' })
     }
 
+    await Info.deleteMany({ user: `${id}` })
+    await Plan.deleteMany({ user: `${id}` })
+    await Contact.deleteMany({ user: `${id}` })
+    await Income.deleteMany({ user: `${id}` })
     const result = await user.deleteOne()
-    await Info.deleteMany({ id })
-    await Plan.deleteMany({ id })
-    await Contact.deleteMany({ id })
-    await Income.deleteMany({ id })
+
 
     const reply = `Username ${result.username} with ID ${result._id} and their data deleted`
 

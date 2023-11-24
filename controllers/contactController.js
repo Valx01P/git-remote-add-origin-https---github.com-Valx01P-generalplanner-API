@@ -19,7 +19,7 @@ const getAllContacts = asyncHandler(async (req, res) => {
     // You could also do this with a for...of loop
     const contactWithUser = await Promise.all(contacts.map(async (contacts) => {
         const user = await User.findById(contacts.user).lean().exec()
-        return { ...contacts, username: user.username }
+        return { ...contacts, username: User.username }
     }))
 
     res.json(contactWithUser)

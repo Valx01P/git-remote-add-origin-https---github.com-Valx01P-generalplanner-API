@@ -19,7 +19,7 @@ const getAllIncome = asyncHandler(async (req, res) => {
     // You could also do this with a for...of loop
     const incomeWithUser = await Promise.all(income.map(async (income) => {
         const user = await User.findById(income.user).lean().exec()
-        return { ...income, username: user.username }
+        return { ...income, username: User.username }
     }))
 
     res.json(incomeWithUser)
