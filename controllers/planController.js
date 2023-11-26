@@ -19,7 +19,7 @@ const getAllPlans = asyncHandler(async (req, res) => {
     // You could also do this with a for...of loop
     const plansWithUser = await Promise.all(plans.map(async (plans) => {    //get all the plans for a specific user using their ID
         const user = await User.findById(plans.user).lean().exec()
-        return { ...plans, username: User.username } //return the array of plans for that user
+        return { ...plans, username: user.username } //return the array of plans for that user
     }))
 
     res.json(plansWithUser)

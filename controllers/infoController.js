@@ -19,7 +19,7 @@ const getAllInfo = asyncHandler(async (req, res) => {
     // You could also do this with a for...of loop
     const infoWithUser = await Promise.all(info.map(async (info) => {
         const user = await User.findById(info.user).lean().exec()
-        return { ...info, username: User.username }
+        return { ...info, username: user.username }
     }))
 
     res.json(infoWithUser)
