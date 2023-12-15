@@ -29,6 +29,7 @@ app.use('/', express.static(path.join(__dirname, '/public')))
 //index.html route
 app.use('/', require('./routes/root'))
 //TODO ADD API ENDPOINTS, ROUTES, AND CONTROLLERS FOR EACH DATA MODEL
+app.use('/auth', require('./routes/authRoutes'))
 app.use('/users', require('./routes/userRoutes'))
 app.use('/info', require('./routes/infoRoutes'))
 app.use('/income', require('./routes/incomeRoutes'))
