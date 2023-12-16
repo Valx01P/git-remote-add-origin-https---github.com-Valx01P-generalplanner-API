@@ -1,6 +1,5 @@
 const User = require('../models/User')
 const Info = require('../models/Info')
-const Plan = require('../models/Plan')
 const Contact = require('../models/Contact')
 const Income = require('../models/Income')
 const asyncHandler = require('express-async-handler')

@@ -34,8 +34,6 @@ app.use('/users', require('./routes/userRoutes'))
 app.use('/info', require('./routes/infoRoutes'))
 app.use('/income', require('./routes/incomeRoutes'))
 app.use('/contacts', require('./routes/contactRoutes'))
-app.use('/plans', require('./routes/planRoutes'))
-
 
 //routing for everything else, error stream
 app.all('*', (req, res) => {

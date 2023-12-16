@@ -8,7 +8,7 @@ const incomeSchema = new mongoose.Schema(
             ref: 'User'
         },
         amount: {
-            type: Number,
+            type: String, //Number, for int
             required: true
         },
         title: {
