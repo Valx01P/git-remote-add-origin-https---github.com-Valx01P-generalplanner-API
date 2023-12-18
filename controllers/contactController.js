@@ -6,24 +6,29 @@ const asyncHandler = require('express-async-handler')
 // @route GET /contact
 // @access Private
 const getAllContacts = asyncHandler(async (req, res) => {
-    // Get all contact from MongoDB
-    const contacts = await Contact.find().lean()
+    try {
+        const contacts = await Contact.find().lean()
 
-    // If no contact 
-    if (!contacts?.length) {
-        return res.status(400).json({ message: 'No contacts found' })
+        if (!contacts?.length) {
+            return res.status(400).json({ message: 'No contacts found' })
+        }
+
+        const contactsWithUser = await Promise.all(contacts.map(async (contact) => {
+            // Check if income.user is present before querying the User model
+            if (contact.user) {
+                const user = await User.findById(contact.user).lean().exec()
+                return { ...contact, username: user?.username || 'Unknown' }
+            } else {
+                return { ...contact, username: 'Unknown' }
+            }
+        }))
+
+        res.json(contactsWithUser)
+    } catch (error) {
+        console.error(error)
+        res.status(500).json({ message: 'Internal Server Error' })
     }
-
-    // Add username to each contact before sending the response 
-    // See Promise.all with map() here: https://youtu.be/4lqJBBEpjRE
-    // You could also do this with a for...of loop
-    const contactWithUser = await Promise.all(contacts.map(async (contacts) => {
-        const user = await User.findById(contacts.user).lean().exec()
-        return { ...contacts, username: user.username }
-    }))
-
-    res.json(contactWithUser)
-})
+});
 
 // @desc Create new contact
 // @route POST /contact

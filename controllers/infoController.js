@@ -5,7 +5,7 @@ const asyncHandler = require('express-async-handler')
 // @desc Get all info 
 // @route GET /info
 // @access Private
-const getAllInfo = asyncHandler(async (req, res) => {
+/* const getAllInfo = asyncHandler(async (req, res) => {
     // Get all info from MongoDB
     const info = await Info.find().lean()
 
@@ -23,7 +23,32 @@ const getAllInfo = asyncHandler(async (req, res) => {
     }))
 
     res.json(infoWithUser)
-})
+}) */
+
+const getAllInfo = asyncHandler(async (req, res) => {
+    try {
+        const info = await Info.find().lean()
+
+        if (!info?.length) {
+            return res.status(400).json({ message: 'No info found' })
+        }
+
+        const infoWithUser = await Promise.all(info.map(async (info) => {
+            // Check if info.user is present before querying the User model
+            if (info.user) {
+                const user = await User.findById(info.user).lean().exec()
+                return { ...info, username: user?.username || 'Unknown' }
+            } else {
+                return { ...info, username: 'Unknown' }
+            }
+        }))
+
+        res.json(infoWithUser)
+    } catch (error) {
+        console.error(error)
+        res.status(500).json({ message: 'Internal Server Error' })
+    }
+});
 
 // @desc Create new info
 // @route POST /info

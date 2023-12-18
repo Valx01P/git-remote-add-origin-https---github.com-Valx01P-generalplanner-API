@@ -6,24 +6,29 @@ const asyncHandler = require('express-async-handler')
 // @route GET /income
 // @access Private
 const getAllIncome = asyncHandler(async (req, res) => {
-    // Get all income from MongoDB
-    const income = await Income.find().lean()
+    try {
+        const income = await Income.find().lean()
 
-    // If no income 
-    if (!income?.length) {
-        return res.status(400).json({ message: 'No income found' })
+        if (!income?.length) {
+            return res.status(400).json({ message: 'No info found' })
+        }
+
+        const incomeWithUser = await Promise.all(income.map(async (income) => {
+            // Check if income.user is present before querying the User model
+            if (income.user) {
+                const user = await User.findById(income.user).lean().exec()
+                return { ...income, username: user?.username || 'Unknown' }
+            } else {
+                return { ...income, username: 'Unknown' }
+            }
+        }))
+
+        res.json(incomeWithUser)
+    } catch (error) {
+        console.error(error)
+        res.status(500).json({ message: 'Internal Server Error' })
     }
-
-    // Add username to each income before sending the response 
-    // See Promise.all with map() here: https://youtu.be/4lqJBBEpjRE
-    // You could also do this with a for...of loop
-    const incomeWithUser = await Promise.all(income.map(async (income) => {
-        const user = await User.findById(income.user).lean().exec()
-        return { ...income, username: user.username }
-    }))
-
-    res.json(incomeWithUser)
-})
+});
 
 // @desc Create new income
 // @route POST /income
