@@ -63,7 +63,7 @@ const createNewUser = asyncHandler(async (req, res) => {
 // @route PATCH /users
 // @access Private
 const updateUser = asyncHandler(async (req, res) => {
-    const { id, username, name, description, roles, password } = req.body
+    const { id, username, name, description, password } = req.body
 
     // Confirm data 
     if (!id || !username || !name || !description) {
@@ -94,10 +94,6 @@ const updateUser = asyncHandler(async (req, res) => {
         user.password = await bcrypt.hash(password, 10) // salt rounds 
     }
 
-    if (roles) {
-        user.roles = roles
-    }
-
     const updatedUser = await user.save()
 
     res.json({ message: `${updatedUser.username} updated` })
@@ -122,7 +118,6 @@ const deleteUser = asyncHandler(async (req, res) => {
     }
 
     await Info.deleteMany({ user: `${id}` })
-    await Plan.deleteMany({ user: `${id}` })
     await Contact.deleteMany({ user: `${id}` })
     await Income.deleteMany({ user: `${id}` })
     const result = await user.deleteOne()

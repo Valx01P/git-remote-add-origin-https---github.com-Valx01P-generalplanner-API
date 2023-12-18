@@ -56,10 +56,10 @@ const createNewContact = asyncHandler(async (req, res) => {
 // @route PATCH /contact
 // @access Private
 const updateContact = asyncHandler(async (req, res) => {
-    const { id, user, name, phone, email, description } = req.body
+    const { id, name, phone, email, description } = req.body
 
     // Confirm data
-    if (!id || !user || !name || !phone || !email || !description) {
+    if (!id || !name || !phone || !email || !description) {
         return res.status(400).json({ message: 'All fields are required' })
     }
 
@@ -70,7 +70,6 @@ const updateContact = asyncHandler(async (req, res) => {
         return res.status(400).json({ message: 'Contact not found' })
     }
 
-    contact.user = user
     contact.name = name
     contact.phone = phone
     contact.email = email

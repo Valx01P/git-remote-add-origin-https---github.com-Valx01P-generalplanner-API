@@ -83,10 +83,10 @@ const createNewInfo = asyncHandler(async (req, res) => {
 // @route PATCH /info
 // @access Private
 const updateInfo = asyncHandler(async (req, res) => {
-    const { id, user, title, description } = req.body
+    const { id, title, description } = req.body
 
     // Confirm data
-    if (!id || !user || !title || !description) {
+    if (!id || !title || !description) {
         return res.status(400).json({ message: 'All fields are required' })
     }
 
@@ -100,12 +100,10 @@ const updateInfo = asyncHandler(async (req, res) => {
     // Check for duplicate title
     const duplicate = await Info.findOne({ title }).lean().exec()
 
-    // Allow renaming of the original info 
     if (duplicate && duplicate?._id.toString() !== id) {
         return res.status(409).json({ message: 'Duplicate info title' })
     }
 
-    info.user = user
     info.title = title
     info.description = description
 

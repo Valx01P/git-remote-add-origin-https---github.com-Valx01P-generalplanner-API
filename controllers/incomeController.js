@@ -63,10 +63,10 @@ const createNewIncome = asyncHandler(async (req, res) => {
 // @route PATCH /income
 // @access Private
 const updateIncome = asyncHandler(async (req, res) => {
-    const { id, user, amount, title, description } = req.body
+    const { id, amount, title, description } = req.body
 
     // Confirm data
-    if (!id || !user || !amount || !title || !description) {
+    if (!id || !amount || !title || !description) {
         return res.status(400).json({ message: 'All fields are required' })
     }
 
@@ -85,7 +85,6 @@ const updateIncome = asyncHandler(async (req, res) => {
         return res.status(409).json({ message: 'Duplicate income title' })
     }
 
-    income.user = user
     income.amount = amount
     income.title = title
     income.description = description
