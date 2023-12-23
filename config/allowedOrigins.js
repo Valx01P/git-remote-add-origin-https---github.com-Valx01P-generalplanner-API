@@ -1,5 +1,5 @@
 const allowedOrigins = [
-    'http://localhost:3000'
+    'https://generalplanner-4b4d8b3f5429.herokuapp.com/'
 ]
 
 module.exports = allowedOrigins

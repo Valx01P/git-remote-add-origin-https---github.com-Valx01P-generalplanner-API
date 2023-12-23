@@ -84,6 +84,10 @@ const updateUser = async (req, res) => {
         return res.status(409).json({ message: 'Duplicate username' })
     }
 
+    if (user.username == "Admin" || user.username == "User" || user.username == "admin" || user.username == "user") {
+        return res.status(400).json({ message: 'Cannot edit test users or admins' })
+    }
+
     user.username = username
     user.name = name
     user.description = description

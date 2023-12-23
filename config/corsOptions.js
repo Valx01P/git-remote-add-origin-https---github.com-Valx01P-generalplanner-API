@@ -4,7 +4,7 @@ const corsOptions = {
     origin: (origin, callback) => {
         if (allowedOrigins.indexOf(origin) !== -1 || !origin) {
             callback(null, true) //TAKE OFF !origin TO LIMIT IT TO THOSE ONLY IN THE ARRAY
-        } else {                //IE NOT ALLOWING POSTMAN OR ANY OTHER NON-ORIGIN ENTITIES
+        } else {                //IE NOT ALLOWING POSTMAN OR ANY OTHER NON-ORIGIN ENTITIES, or don't
             callback(new Error('Not allowed by CORS'))
         }//callback true if success, else return the cors error
     },
