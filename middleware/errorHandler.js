@@ -9,7 +9,7 @@ const errorHandler = (err, req, res, next) => {
     //set the status to whatever the ternary determined
     res.status(status)
 
-    res.json({ message: err.message})
+    res.json({ message: err.message, isError: true})
 }
 
 module.exports = errorHandler

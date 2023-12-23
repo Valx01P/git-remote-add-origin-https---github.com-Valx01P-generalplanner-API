@@ -1,11 +1,10 @@
 const Income = require('../models/Income')
 const User = require('../models/User')
-const asyncHandler = require('express-async-handler')
 
 // @desc Get all income 
 // @route GET /income
 // @access Private
-const getAllIncome = asyncHandler(async (req, res) => {
+const getAllIncome = async (req, res) => {
     try {
         const income = await Income.find().lean()
 
@@ -28,24 +27,17 @@ const getAllIncome = asyncHandler(async (req, res) => {
         console.error(error)
         res.status(500).json({ message: 'Internal Server Error' })
     }
-});
+}
 
 // @desc Create new income
 // @route POST /income
 // @access Private
-const createNewIncome = asyncHandler(async (req, res) => {
+const createNewIncome = async (req, res) => {
     const { user, amount, title, description } = req.body
 
     // Confirm data
     if (!user || !amount || !title || !description) {
         return res.status(400).json({ message: 'All fields are required' })
-    }
-
-    // Check for duplicate title
-    const duplicate = await Income.findOne({ title }).lean().exec()
-
-    if (duplicate) {
-        return res.status(409).json({ message: 'Duplicate income title' })
     }
 
     // Create and store the new user 
@@ -56,13 +48,12 @@ const createNewIncome = asyncHandler(async (req, res) => {
     } else {
         return res.status(400).json({ message: 'Invalid income data received' })
     }
-
-})
+}
 
 // @desc Update a income
 // @route PATCH /income
 // @access Private
-const updateIncome = asyncHandler(async (req, res) => {
+const updateIncome = async (req, res) => {
     const { id, amount, title, description } = req.body
 
     // Confirm data
@@ -77,14 +68,6 @@ const updateIncome = asyncHandler(async (req, res) => {
         return res.status(400).json({ message: 'Income not found' })
     }
 
-    // Check for duplicate title
-    const duplicate = await Income.findOne({ title }).lean().exec()
-
-    // Allow renaming of the original income 
-    if (duplicate && duplicate?._id.toString() !== id) {
-        return res.status(409).json({ message: 'Duplicate income title' })
-    }
-
     income.amount = amount
     income.title = title
     income.description = description
@@ -92,12 +75,12 @@ const updateIncome = asyncHandler(async (req, res) => {
     const updatedIncome = await income.save()
 
     res.json(`'${updatedIncome.title}' updated`)
-})
+}
 
 // @desc Delete a income
 // @route DELETE /income
 // @access Private
-const deleteIncome = asyncHandler(async (req, res) => {
+const deleteIncome = async (req, res) => {
     const { id } = req.body
 
     // Confirm data
@@ -117,7 +100,7 @@ const deleteIncome = asyncHandler(async (req, res) => {
     const reply = `Income '${result.title}' with ID ${result._id} deleted`
 
     res.json(reply)
-})
+}
 
 module.exports = {
     getAllIncome,

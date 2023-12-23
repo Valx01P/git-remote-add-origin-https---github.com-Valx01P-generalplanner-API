@@ -1,6 +1,5 @@
 const Info = require('../models/Info')
 const User = require('../models/User')
-const asyncHandler = require('express-async-handler')
 
 // @desc Get all info 
 // @route GET /info
@@ -25,7 +24,7 @@ const asyncHandler = require('express-async-handler')
     res.json(infoWithUser)
 }) */
 
-const getAllInfo = asyncHandler(async (req, res) => {
+const getAllInfo = async (req, res) => {
     try {
         const info = await Info.find().lean()
 
@@ -48,24 +47,17 @@ const getAllInfo = asyncHandler(async (req, res) => {
         console.error(error)
         res.status(500).json({ message: 'Internal Server Error' })
     }
-});
+}
 
 // @desc Create new info
 // @route POST /info
 // @access Private
-const createNewInfo = asyncHandler(async (req, res) => {
+const createNewInfo = async (req, res) => {
     const { user, title, description } = req.body
 
     // Confirm data
     if (!user || !title || !description) {
         return res.status(400).json({ message: 'All fields are required' })
-    }
-
-    // Check for duplicate title
-    const duplicate = await Info.findOne({ title }).lean().exec()
-
-    if (duplicate) {
-        return res.status(409).json({ message: 'Duplicate info title' })
     }
 
     // Create and store the new user 
@@ -76,13 +68,12 @@ const createNewInfo = asyncHandler(async (req, res) => {
     } else {
         return res.status(400).json({ message: 'Invalid info data received' })
     }
-
-})
+}
 
 // @desc Update a info
 // @route PATCH /info
 // @access Private
-const updateInfo = asyncHandler(async (req, res) => {
+const updateInfo = async (req, res) => {
     const { id, title, description } = req.body
 
     // Confirm data
@@ -97,25 +88,18 @@ const updateInfo = asyncHandler(async (req, res) => {
         return res.status(400).json({ message: 'Info not found' })
     }
 
-    // Check for duplicate title
-    const duplicate = await Info.findOne({ title }).lean().exec()
-
-    if (duplicate && duplicate?._id.toString() !== id) {
-        return res.status(409).json({ message: 'Duplicate info title' })
-    }
-
     info.title = title
     info.description = description
 
     const updatedInfo = await info.save()
 
     res.json(`'${updatedInfo.title}' updated`)
-})
+}
 
 // @desc Delete a info
 // @route DELETE /info
 // @access Private
-const deleteInfo = asyncHandler(async (req, res) => {
+const deleteInfo = async (req, res) => {
     const { id } = req.body
 
     // Confirm data
@@ -135,7 +119,7 @@ const deleteInfo = asyncHandler(async (req, res) => {
     const reply = `Info '${result.title}' with ID ${result._id} deleted`
 
     res.json(reply)
-})
+}
 
 module.exports = {
     getAllInfo,

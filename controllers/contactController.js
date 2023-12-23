@@ -1,11 +1,10 @@
 const Contact = require('../models/Contact')
 const User = require('../models/User')
-const asyncHandler = require('express-async-handler')
 
 // @desc Get all contact 
 // @route GET /contact
 // @access Private
-const getAllContacts = asyncHandler(async (req, res) => {
+const getAllContacts = async (req, res) => {
     try {
         const contacts = await Contact.find().lean()
 
@@ -28,12 +27,12 @@ const getAllContacts = asyncHandler(async (req, res) => {
         console.error(error)
         res.status(500).json({ message: 'Internal Server Error' })
     }
-});
+}
 
 // @desc Create new contact
 // @route POST /contact
 // @access Private
-const createNewContact = asyncHandler(async (req, res) => {
+const createNewContact = async (req, res) => {
     const { user, name, phone, email, description } = req.body
 
     // Confirm data
@@ -49,13 +48,12 @@ const createNewContact = asyncHandler(async (req, res) => {
     } else {
         return res.status(400).json({ message: 'Invalid contact data received' })
     }
-
-})
+}
 
 // @desc Update a contact
 // @route PATCH /contact
 // @access Private
-const updateContact = asyncHandler(async (req, res) => {
+const updateContact = async (req, res) => {
     const { id, name, phone, email, description } = req.body
 
     // Confirm data
@@ -78,12 +76,12 @@ const updateContact = asyncHandler(async (req, res) => {
     const updatedContact = await contact.save()
 
     res.json(`'${updatedContact.name}' updated`)
-})
+}
 
 // @desc Delete a contact
 // @route DELETE /contact
 // @access Private
-const deleteContact = asyncHandler(async (req, res) => {
+const deleteContact = async (req, res) => {
     const { id } = req.body
 
     // Confirm data
@@ -103,7 +101,7 @@ const deleteContact = asyncHandler(async (req, res) => {
     const reply = `Contact '${result.name}' with ID ${result._id} deleted`
 
     res.json(reply)
-})
+}
 
 module.exports = {
     getAllContacts,
