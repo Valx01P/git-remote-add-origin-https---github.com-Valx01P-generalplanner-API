@@ -1,5 +1,3 @@
-const allowedOrigins = [
-    'https://generalplanner-4b4d8b3f5429.herokuapp.com/'
-]
+const allowedOrigins = ["https://general-planner.onrender.com/"];
 
-module.exports = allowedOrigins
+module.exports = allowedOrigins;
