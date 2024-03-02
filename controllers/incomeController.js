@@ -9,7 +9,7 @@ const getAllIncome = async (req, res) => {
         const income = await Income.find().lean()
 
         if (!income?.length) {
-            return res.status(400).json({ message: 'No info found' })
+            return res.status(400).json({ message: 'No income found' })
         }
 
         const incomeWithUser = await Promise.all(income.map(async (income) => {
